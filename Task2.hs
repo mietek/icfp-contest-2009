@@ -22,7 +22,7 @@ test k i0 = (i2, lenRV d)
     r2 = lenRV q
     i1 = hohTrans runP r1 r2 i0
     (_, _, _, d) = run i1
-    i2 = i1 ++ frame 1000 (0, 0)
+    i2 = i1 ++ frame 901 (0, 0)
 
 -- TODO: intelligent starting step
 
@@ -68,24 +68,25 @@ goToward k i0 s t d =
 -- we should check if we find a good enough solution (d < 1000)
 -- if not, maybe we should enter slower orbit (max r1 r2 * 1.25)?
 
--- main :: Int -> String
--- main k = show d
---   where
---     run = runVM k
---     runP = (\(_, p, _, _) -> p) . run
---     (_, p, q, _) = run (frame 1 (0, 0))
---     r1 = lenRV p
---     r2 = lenRV q
---     i1 = if min r1 r2 / max r1 r2 < 0.5
---       then hohTrans runP r1 (max r1 r2 * 0.7) (frame 1 (0, 0))
---       else frame 1 (0, 0)
---     (t, _, d) = findBest k i1
-
-
 main :: Int -> String
-main k = i
+main k = show d
   where
-    (_, i, _) = findBest k (frame 1 (0, 0))
+    run = runVM k
+    runP = (\(_, p, _, _) -> p) . run
+    (_, p, q, _) = run (frame 1 (0, 0))
+    r1 = lenRV p
+    r2 = lenRV q
+    i1 = if min r1 r2 / max r1 r2 < 0.5
+      then hohTrans runP r1 (max r1 r2 * 0.7) (frame 1 (0, 0))
+      else frame 1 (0, 0)
+    -- (t, _, d) = findBest k i1
+    (_, d) = test k (i1 ++ frame 15926 (0, 0))
+
+
+-- main :: Int -> String
+-- main k = i
+--   where
+--     (_, i, _) = findBest k (frame 1 (0, 0))
 
 
 

@@ -21,4 +21,4 @@ main k = i3
     r1 = lenRV p
     i1 = hohTrans runP r1 r2 (frame 1 (0, 0))
     i2 = burnFuel runFP i1
-    i3 = i2 ++ frame 1000 (0, 0)
+    i3 = i2 ++ frame 901 (0, 0)
