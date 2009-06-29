@@ -1,10 +1,15 @@
-all: vm solve trace
+all: vm run solve trace
 
-vm: vm.c
-	gcc -Wall -O2 -o vm vm.c
+vm: vm.h vm.c
+	gcc -shared -fPIC -Wall -O2 vm.c -o libvm.so
+	rm -f libvm.dylib
+	ln -s libvm.so libvm.dylib
+
+run: run.c
+	gcc -Wall -O2 -L. -lvm -o run run.c
 
 solve: *.hs
-	/usr/bin/ghc --make -O2 -o solve Main.hs
+	/usr/bin/ghc --make -O2 -L. -lvm -o solve Main.hs
 
 trace: trace.c
 	gcc -Wall -O2 -o trace trace.c
@@ -28,4 +33,4 @@ trace_all: trace
 	./trace < solved/2004.txt > traced/2004.osf
 
 clean:
-	rm vm solve trace *\.hi *\.o
+	rm -f libvm.so libvm.dylib run solve trace *\.hi *\.o
