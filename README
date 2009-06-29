@@ -1,0 +1,33 @@
+The Church of the Least Fixed Point
+ICFP Programming Contest 2009
+
+Miëtek Bak
+Bartosz Ćwikłowski
+Tomasz Kłak
+Maciej Kotowicz
+Jakub Michaliszyn
+Filip Sieczkowski
+
+
+
+
+Hi!  Thanks for the awesome contest.
+
+We have a nice solution generator for 100x, an almost-good solution generator for 200x, and hacked by hand solutions for 300x.  We didn't have enough time for 400x.
+
+We use our own textual scenario format.  The first line contains the configuration number.  The following lines contain "n dx dy", meaning the VM will execute n iterations with the appropriate ports set to the corresponding values.
+
+`make` to build all the code.
+
+`./run -h < scenario.txt` will execute the scenario, printing outputs in a human-readable format.  Omitting the "-h" will make it easier to parse, which is what we were doing early on.
+
+`./trace < scenario.txt > scenario.osf` will trace the scenario into the officially approved format.
+
+`./solve 1001 > 1001.txt` will generate a scenario containing a solution for the 1001 configuration.  Internally, it wraps the VM as pure Haskell functions.
+
+`make solve_all && make trace_all` will generate and trace all the scenarios that we're able to solve.
+
+We had a lot of fun.
+
+Signing off,
+The Church of the Least Fixed Point
