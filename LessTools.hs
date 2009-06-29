@@ -87,16 +87,18 @@ dotRV (x1, y1) (x2, y2) = x1 * x2 + y1 * y2
 nrmRV :: RV -> RV
 nrmRV v = v `divRV` (lenRV v)
 
--- absolute angle between vectors
+-- angle between vectors (0..2*pi)
 angSubRV :: RV -> RV -> Rad
-angSubRV v1 v2 =
-  if ad <= pi
-    then ad
-    else -2 * pi + ad
+angSubRV v1 v2 = angRV v2 - angRV v1
+
+-- angle between vectors (-pi..pi)
+angSubRV' :: RV -> RV -> Rad
+angSubRV' v1 v2 =
+  if a <= pi
+    then a
+    else -2 * pi + a
   where
-    a1 = angRV v1
-    a2 = angRV v2
-    ad = a2 - a1
+    a = v1 `angSubRV` v2
 
 
 -- rectangular vector to polar vector

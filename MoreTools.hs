@@ -25,7 +25,6 @@ matchVel getP getQ s0 = (s1, scen)
   where
     v = curSatVelRV getP s0
     w = curSatVelRV getQ s0
---    vd = revRV (v `subRV` w)
     vd = v `subRV` w
     s1 = runStep vd s0
     scen = [(1, vd)]
@@ -44,5 +43,3 @@ hohTrans getP dstR s0 = (s2, scen)
     vd2 = hohVDeltaRV' v2 srcR dstR
     s2 = runStep vd2 s1
     scen = [(1, vd1), (t, (0, 0)), (1, vd2)]
-
-

@@ -1,7 +1,7 @@
 all: vm run solve trace
 
 vm: vm.h vm.c
-	gcc -shared -fPIC -Wall -O2 vm.c -o libvm.so
+	gcc -shared -fPIC -Wall -O2 -lm -o libvm.so vm.c
 	rm -f libvm.dylib
 	ln -s libvm.so libvm.dylib
 

@@ -8,7 +8,7 @@ import MoreTools
 import VM
 
 
-type Result = (Rad, Double, State, Scen)
+type Result = (Rad, M, State, Scen)
 
 
 get :: State -> (RV, RV, RV)
@@ -31,7 +31,7 @@ tryHohTrans :: Double -> State -> Result
 tryHohTrans dstR s0 = (a, d, s1, hohScen)
   where
     (s1, hohScen) = hohTrans getP dstR s0
-    a = (getP s1) `angSubRV` (getQ s1)
+    a = (getP s1) `angSubRV'` (getQ s1)
     d = lenRV (getD s1)
 
 
