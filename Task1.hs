@@ -1,26 +1,41 @@
 module Task1 (main) where
 
+import LessTools
 import Tools
 import MoreTools
-import qualified VM as VM
+import VM
 
 
-runScen :: Int -> Scen -> (Double, RV, M)
-runScen conf scen = (f, (x, y), r)
+get :: State -> (Double, RV, M)
+get s =
+  case getOutput s of
+    [_, f, x, y, r] -> (f, (x, y), r)
+                       
+
+getF :: State -> Double
+getF = firstOf3 . get
+
+getP :: State -> RV
+getP = secondOf3 . get
+
+getR :: State -> M
+getR = thirdOf3 . get
+
+
+wasteFuel :: State -> Scen
+wasteFuel s0 = scen
   where
-    s1 = VM.new "bin1.obf" conf
-    s2 = VM.runScen s1 scen
-    [_, f, x, y, r] = VM.getOutput s2
+    f = getF s0 - 0.000001
+    v = curSatVelRV getP s0
+    vd = extDeltaRV v (f / 4)
+    vd' = extDeltaRV v (f / (-2))
+    scen = [(1, vd), (1, vd'), (1, vd)]
 
 
 main :: Int -> Scen
-main conf = scen3
+main conf = stdScen (hohScen ++ wasteScen)
   where
-    run = runScen conf
-    runP = (\(_, p, _) -> p) . run
-    runFP = (\(f, p, _) -> (f, p)) . run
-    (_, p, r2) = run [(1, (0, 0))]
-    r1 = lenRV p
-    scen1 = hohTrans runP r1 r2 [(1, (0, 0))]
-    scen2 = burnFuel runFP scen1
-    scen3 = scen2 ++ [(901, (0, 0))]
+    s0 = runStepZ (new "bin1.obf" conf)
+    dstR = getR s0
+    (s1, hohScen) = hohTrans getP dstR s0
+    wasteScen = wasteFuel s1

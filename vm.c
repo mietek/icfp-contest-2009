@@ -114,6 +114,8 @@ struct state *new(const char *path, uint32_t conf) {
 	if (!(s = malloc(sizeof(struct state))))
 		halt("malloc");
 	s->status = 0;
+	s->input[DX_INPUT] = 0;
+	s->input[DY_INPUT] = 0;
 	s->input[CONF_INPUT] = conf;
 	s->max_output = 0;
 	length = read_binary(path, &buf);

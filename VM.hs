@@ -2,7 +2,7 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# LANGUAGE EmptyDataDecls #-}
 
-module VM (new, copy, runStep, runNSteps, runScen, getOutput) where
+module VM (State, new, copy, runStep, runStepZ, runNSteps, runNStepsZ, runScen, getOutput) where
 
 import Control.Monad (mapM)
 import Data.Word (Word32)
@@ -54,25 +54,31 @@ copy (State q1) =
       q2 <- newForeignPtr finalizerFree p2
       return (State q2)
 
-runStep :: State -> (Double, Double) -> State
-runStep (State q1) (dx, dy) =
+runStep :: (Double, Double) -> State -> State
+runStep (dx, dy) (State q1) =
   unsafePerformIO $
     withForeignPtr q1 $ \p1 -> do
       p2 <- cRunStep p1 dx dy
       q2 <- newForeignPtr finalizerFree p2
       return (State q2)
 
-runNSteps :: State -> Int -> (Double, Double) -> State
-runNSteps (State q1) n (dx, dy) =
+runStepZ :: State -> State
+runStepZ = runStep (0, 0)
+
+runNSteps :: Int -> (Double, Double) -> State -> State
+runNSteps n (dx, dy) (State q1) =
   unsafePerformIO $
     withForeignPtr q1 $ \p1 -> do
       p2 <- cRunNSteps p1 (fromIntegral n) dx dy
       q2 <- newForeignPtr finalizerFree p2
       return (State q2)
 
-runScen :: State -> [(Int, (Double, Double))] -> State
-runScen s ((n, d) : ps) = runScen (runNSteps s n d) ps
-runScen s [] = s
+runNStepsZ :: Int -> State -> State
+runNStepsZ n = runNSteps n (0, 0)
+
+runScen :: [(Int, (Double, Double))] -> State -> State
+runScen ((n, d) : ps) s = runScen ps $ runNSteps n d s
+runScen [] s = s
 
 getOutput :: State -> [Double]
 getOutput (State q) =
