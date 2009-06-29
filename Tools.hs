@@ -108,7 +108,7 @@ gForce m1 m2 r = (g * m1 * m2) / (r * r)
 
 -- earth gravitational force
 earthGForce :: Kg -> M -> N
-earthGForce = gForce earthR
+earthGForce = gForce earthM
 
 -- earth-satellite gravitational force
 earthSatGForce :: M -> N
